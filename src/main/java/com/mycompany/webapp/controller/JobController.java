@@ -55,22 +55,22 @@ public class JobController {
 		jobService.pauseJob(vo);
 	}
 	
-//	/** 
-//	 * Job을 추가하는 컨트롤러
-//	 * @param jobId
-//	 * @param jobGroupId
-//	 * @param triggerId
-//	 * @param triggerKey
-// 	 * @param cron
-//	 * @param ip
-//	 * @param port
-//	 * @param path
-//	 */
-//	@ResponseBody
-//	@PostMapping("/job/add")
-//	public void addJob(BatchGroupVo vo){
-//		jobService.addJob(vo);
-//	}
+	/** 
+	 * Job을 추가하는 컨트롤러
+	 * @param jobId
+	 * @param jobGroupId
+	 * @param triggerId
+	 * @param triggerKey
+ 	 * @param cron
+	 * @param ip
+	 * @param port
+	 * @param path
+	 */
+	@ResponseBody
+	@PostMapping("/job/add")
+	public void addJob(BatchGroupVo vo){
+		jobService.addJob(vo);
+	}
 
 //	/** 
 //	 * Job을 삭제하는 컨트롤러

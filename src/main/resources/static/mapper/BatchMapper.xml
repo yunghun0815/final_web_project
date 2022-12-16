@@ -14,6 +14,7 @@
 			HOST,
 			IP,
 			PORT,
+			ACTIVE,
 			START_DATE as startDate,
 			END_DATE as endDate			
 		FROM BATCH_GROUP
@@ -86,6 +87,9 @@
 			PATH,
 			EXECUTION_ORDER as executionOrder
 		FROM BATCH_APP
+		<if test="batchGroupId != null">
+			WHERE BATCH_GROUP_ID = #{batchGroupId}
+		</if>
 	</select>
 	
 	<insert id="insertBatchApp" parameterType="com.mycompany.webapp.model.BatchAppVo">

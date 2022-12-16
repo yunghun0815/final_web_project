@@ -25,5 +25,7 @@ public interface IBatchService {
 	void deleteBatchAppByGroupId(int batchGroupId);
 
 	List<BatchGroupVo> getBatchGroupByJobKey(String key);
+
+	List<BatchAppVo> getBatchAppListByBatchGroupId(int batchGroupId);
 	
 }

@@ -74,4 +74,9 @@ public class BatchService implements IBatchService{
 		return batchDao.getBatchGroupByJobKey(key);
 	}
 
+	@Override
+	public List<BatchAppVo> getBatchAppListByBatchGroupId(int batchGroupId) {
+		return batchDao.getBatchAppList(batchGroupId);
+	}
+
 }

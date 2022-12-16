@@ -18,6 +18,8 @@ public interface BatchDao {
 	void deleteBatchGroup(int batchGroupId);
 
 	List<BatchAppVo> getBatchAppList();
+	
+	List<BatchAppVo> getBatchAppList(int batchGroupId);
 
 	void insertBatchApp(BatchAppVo vo);
 
@@ -28,4 +30,6 @@ public interface BatchDao {
 	void deleteBatchAppByGroupId(int batchGroupId);
 
 	List<BatchGroupVo> getBatchGroupByJobKey(String jobKey);
+
+	List<BatchAppVo> getBatchAppListByBatchGroupId(int batchGroupId);
 }

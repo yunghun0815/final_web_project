@@ -30,19 +30,17 @@ public class AgentJob implements Job {
 		log.info("키" + context.getJobDetail().getKey());
 		List<BatchGroupVo> batchGroupVo = batchService
 				.getBatchGroupByJobKey(context.getJobDetail().getKey().toString());
-
-		log.info("");
-		log.info("-----------------------------------");
-		log.info(batchGroupVo.get(0).getIp() + ":" + batchGroupVo.get(0).getPort() + " 배치 프로그램 실행");
-		String ip = batchGroupVo.get(0).getIp();
-		int port = batchGroupVo.get(0).getPort();
-		String path = batchGroupVo.get(0).getPath();
 		
 		// 배치그룹에 등록된 앱 수만큼 실행
-		batchServer.sendMessage(ip, port, path);
-
-		log.info("-----------------------------------");
-
+		for(BatchGroupVo vo : batchGroupVo) {
+			log.info("");
+			log.info("-----------------------------------");
+			log.info(batchGroupVo.get(0).getIp() + ":" + batchGroupVo.get(0).getPort() + " 배치 프로그램 실행");
+			String ip = vo.getIp();
+			int port = vo.getPort();
+			String path = vo.getPath();
+			batchServer.sendMessage(ip, port, path);
+			log.info("-----------------------------------");
+		}
 	}
-
 }
