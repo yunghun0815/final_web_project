@@ -6,6 +6,7 @@ import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
@@ -23,12 +24,13 @@ public class BatchServer {
 		threadPool = Executors.newFixedThreadPool(10);
 	}
 
-	public void sendMessage(String ip, int port, String path) {
+	public String sendMessage(String ip, int port, String path) {
+		String response = null;
+		
 		log.info("메시지 전송");
 		log.info("ip : " + ip);
 		log.info("port : " + port);
 		log.info("path : " + path);
-		
 		try {
 			Socket socket = new Socket(ip, port);
 			DataInputStream dis = new DataInputStream(socket.getInputStream());
@@ -37,14 +39,29 @@ public class BatchServer {
 			dos.writeUTF(path);
 			dos.flush();
 			
+			response = dis.readUTF();
+			
+			
+			
 			dos.close();
 			dis.close();
 		} catch (Exception e) {
+			JSONObject jsonObject = new JSONObject("response: fail");
+			response = jsonObject.getString("response").toString();
 			e.printStackTrace();
 		} 
 		
+		return response;
 	}
 	
+	public JSONObject receiveMessage(String message) {
+		try {
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 	
 	// * 서버 종료
 	public void stop() {

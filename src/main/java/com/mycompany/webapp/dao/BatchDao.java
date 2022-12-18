@@ -6,10 +6,13 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.mycompany.webapp.model.BatchAppVo;
 import com.mycompany.webapp.model.BatchGroupVo;
+import com.mycompany.webapp.model.BatchLogVo;
 
 @Mapper
 public interface BatchDao {
 	List<BatchGroupVo> getBatchGroupList();
+	
+	List<BatchGroupVo> getBatchGroupList(int batchGroupId);
 
 	void insertBatchGroup(BatchGroupVo vo);
 
@@ -32,4 +35,14 @@ public interface BatchDao {
 	List<BatchGroupVo> getBatchGroupByJobKey(String jobKey);
 
 	List<BatchAppVo> getBatchAppListByBatchGroupId(int batchGroupId);
+
+	void insertBatchLog(BatchLogVo vo);
+
+	int getBatchLogMaxNoByBatchApp(int appId);
+
+	BatchGroupVo getBatchGroupByBatchGroupId(int batchGroupId);
+
+	List<BatchLogVo> getBatchLogList(int appId);
+
+	void deleteBatchLog(int batchAppId);
 }

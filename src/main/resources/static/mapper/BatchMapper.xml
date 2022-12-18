@@ -16,8 +16,32 @@
 			PORT,
 			ACTIVE,
 			START_DATE as startDate,
-			END_DATE as endDate			
+			END_DATE as endDate,
+			JOB_KEY as jobKey			
 		FROM BATCH_GROUP
+	</select>
+
+	<select id="getBatchGroupByBatchGroupId" parameterType="int" resultType="com.mycompany.webapp.model.BatchGroupVo">
+		SELECT 
+			BATCH_GROUP_ID as batchGroupId, 
+			JOB_ID as jobId,
+			JOB_GROUP_ID as jobGroupId,
+			JOB_GROUP_NAME as jobGroupName,
+			TRIGGER_ID as triggerId,
+			TRIGGER_GROUP_ID as triggerGroupId,
+			DESCRIPTION,
+			CRON,
+			HOST,
+			IP,
+			PORT,
+			ACTIVE,
+			START_DATE as startDate,
+			END_DATE as endDate,
+			JOB_KEY as jobKey			
+		FROM 
+			BATCH_GROUP
+		WHERE 
+			BATCH_GROUP_ID = #{batchGroupId}	
 	</select>
 	
 	<insert id="insertBatchGroup" parameterType="com.mycompany.webapp.model.BatchGroupVo">
@@ -70,7 +94,8 @@
 			PORT = #{port},
 			ACTIVE = #{active},
 			START_DATE = #{startDate},
-			END_DATE = #{endDate}				
+			END_DATE = #{endDate},
+			JOB_KEY = #{jobKey}				
 		WHERE 
 			BATCH_GROUP_ID = #{batchGroupId}
 	</update>
@@ -84,8 +109,7 @@
 			APP_ID as appId,
 			BATCH_GROUP_ID as batchGroupId,
 			APP_NAME as appName,
-			PATH,
-			EXECUTION_ORDER as executionOrder
+			PATH
 		FROM BATCH_APP
 		<if test="batchGroupId != null">
 			WHERE BATCH_GROUP_ID = #{batchGroupId}
@@ -97,15 +121,13 @@
 			APP_ID,
 			BATCH_GROUP_ID,
 			APP_NAME,
-			PATH,
-			EXECUTION_ORDER
+			PATH
 		)
 		VALUES(
 			seq_app_id.nextval,
 			#{batchGroupId},
 			#{appName},
-			#{path},
-			#{executionOrder}
+			#{path}
 		)		
 	</insert>
 	
@@ -113,8 +135,7 @@
 		UPDATE BATCH_APP
 		SET
 			APP_NAME = #{appName},
-			PATH = #{path},
-			EXECUTION_ORDER = #{executionOrder}
+			PATH = #{path}
 		
 		WHERE
 			APP_ID = #{appId}
@@ -132,7 +153,8 @@
 		SELECT 
 			IP,
 			PORT,
-			PATH
+			PATH,
+			APP_ID as appId
 		FROM
 			BATCH_GROUP
 		JOIN 
@@ -142,4 +164,48 @@
 		WHERE 
 			JOB_KEY = #{jobKey}
 	</select>
+	
+	<select id="getBatchLogMaxNoByBatchApp" parameterType="int" resultType="int">
+		SELECT 
+			NVL(MAX(NO), 0) 
+		FROM 
+			BATCH_LOG
+		WHERE APP_ID = #{appId} 
+	</select>
+	
+	<insert id="insertBatchLog" parameterType="com.mycompany.webapp.model.BatchLogVo">
+		INSERT INTO BATCH_LOG(
+			NO,
+			APP_ID,
+			RESPONSE,
+			LOG_DATE
+		)
+		VALUES(
+			#{no},
+			#{appId},
+			#{response},
+			#{logDate}
+		)	
+	</insert>
+	
+	<select id="getBatchLogList" parameterType="int" resultType="com.mycompany.webapp.model.BatchLogVo">
+	 	SELECT 
+	 		NO,
+	 		APP_ID as appId,
+	 		RESPONSE,
+	 		LOG_DATE as logDate
+	 	FROM
+	 		BATCH_LOG
+	 	WHERE
+	 		APP_ID = #{appId}
+	 	ORDER BY
+	 		NO
+	</select>
+	
+	<delete id="deleteBatchLog" parameterType="int">
+		DELETE FROM
+			BATCH_LOG
+		WHERE
+			APP_ID = #{appId} 
+	</delete>
 </mapper>

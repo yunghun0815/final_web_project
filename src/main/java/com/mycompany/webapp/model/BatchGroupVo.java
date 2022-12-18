@@ -28,4 +28,6 @@ public class BatchGroupVo {
 	
 	private String path; //경로
 	private String jobKey; //잡키
+	private int appId; //앱아이디
+	private String fire; //실행여부
 }	

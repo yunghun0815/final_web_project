@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.mycompany.webapp.model.BatchAppVo;
 import com.mycompany.webapp.model.BatchGroupVo;
+import com.mycompany.webapp.model.BatchLogVo;
 
 public interface IBatchService {
 	List<BatchGroupVo> getBatchGroupList();
@@ -28,4 +29,9 @@ public interface IBatchService {
 
 	List<BatchAppVo> getBatchAppListByBatchGroupId(int batchGroupId);
 	
+	void insertBatchLog(BatchLogVo vo);
+	
+	BatchGroupVo getBatchGroupByBatchGroupId(int batchGroupId);
+
+	List<BatchLogVo> getBatchLogList(int appId);
 }

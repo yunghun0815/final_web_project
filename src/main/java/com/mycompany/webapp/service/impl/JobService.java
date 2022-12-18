@@ -1,5 +1,7 @@
 package com.mycompany.webapp.service.impl;
 
+import java.util.List;
+
 import org.quartz.CronScheduleBuilder;
 import org.quartz.CronTrigger;
 import org.quartz.JobBuilder;
@@ -13,6 +15,7 @@ import org.quartz.TriggerKey;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mycompany.webapp.dao.BatchDao;
 import com.mycompany.webapp.model.BatchGroupVo;
 import com.mycompany.webapp.scheduler.AgentJob;
 import com.mycompany.webapp.service.IJobService;
@@ -26,27 +29,43 @@ public class JobService implements IJobService {
 	@Autowired
 	Scheduler scheduler;
 
+	@Autowired
+	BatchService batchService;
+
+	@Autowired
+	BatchDao batchDao;
+	
 	@Override
 	public void startSchedule() {
+		List<BatchGroupVo> batchGroupVo = batchService.getBatchGroupList();
 		try {
-			scheduler.start();
-		} catch (SchedulerException e) {
+			for(BatchGroupVo result :  batchGroupVo) {
+				//자동실행이 'Y' 이고 배치 앱이 등록된 그룹만 실행 
+				if(result.getActive().equals("Y") && batchService.getBatchAppListByBatchGroupId(result.getBatchGroupId()).size() > 0) {
+					scheduler.resumeJob(new JobKey(result.getJobId(), result.getJobGroupId()));
+				}
+			}	
+		}catch(SchedulerException e) {
 			log.error(e.getMessage());
-			throw new RuntimeException();
+			throw new RuntimeException();			
 		}
 	}
-	
+
 	@Override
 	public void shutdownSchedule() {
 		try {
-			scheduler.shutdown();
-		} catch (SchedulerException e) {
+			List<BatchGroupVo> batchGroupVo = batchService.getBatchGroupList();
+			//모든 배치그룹 Job 정지
+			for(BatchGroupVo result :  batchGroupVo) {
+				scheduler.pauseJob(new JobKey(result.getJobId(), result.getJobGroupId()));
+			}
+		}catch (SchedulerException e) {
 			log.error(e.getMessage());
 			throw new RuntimeException();
 		}
-		
+
 	}
-	
+
 	@Override
 	public void startJob(BatchGroupVo vo) {
 		//jobId와 jobGroupId로 JobKey 생성
@@ -78,7 +97,9 @@ public class JobService implements IJobService {
 	}
 
 	@Override
-	public void addJob(BatchGroupVo vo) {
+	public void addJob(int batchGroupId) {
+		BatchGroupVo vo = batchService.getBatchGroupByBatchGroupId(batchGroupId);
+		
 		//JobDetail 생성, jobDataMap에 ip와 port 추가
 		JobDetail job = JobBuilder.newJob(AgentJob.class)
 				.withIdentity(vo.getJobId(), vo.getJobGroupId())
@@ -100,7 +121,8 @@ public class JobService implements IJobService {
 	}
 
 	@Override
-	public void removeJob(BatchGroupVo vo) {
+	public void removeJob(int batchGroupId) {
+		BatchGroupVo vo = batchService.getBatchGroupByBatchGroupId(batchGroupId);
 		try {
 			//Trigger 정지
 			scheduler.pauseTrigger(new TriggerKey(vo.getTriggerId(), vo.getTriggerGroupId()));

@@ -56,34 +56,26 @@ public class JobController {
 	}
 	
 	/** 
-	 * Job을 추가하는 컨트롤러
-	 * @param jobId
-	 * @param jobGroupId
-	 * @param triggerId
-	 * @param triggerKey
- 	 * @param cron
-	 * @param ip
-	 * @param port
-	 * @param path
+	 * 등록된 그룹아이디로 Job을 실행하는 컨트롤러
+	 * @param batchGroupId
 	 */
 	@ResponseBody
 	@PostMapping("/job/add")
-	public void addJob(BatchGroupVo vo){
-		jobService.addJob(vo);
+	public void addJob(int batchGroupId){
+		
+		jobService.addJob(batchGroupId);
+		
 	}
 
-//	/** 
-//	 * Job을 삭제하는 컨트롤러
-//	 * @param jobId
-//	 * @param jobGroupId
-//	 * @param triggerId
-//	 * @param triggerKey
-//	 */
-//	@ResponseBody
-//	@PostMapping("/job/remove")
-//	public void removeJob(BatchGroupVo vo){
-//		jobService.removeJob(vo);
-//	}
+	/** 
+	 * Job을 삭제하는 컨트롤러
+	 * @param batchGroupId
+	 */
+	@ResponseBody
+	@PostMapping("/job/remove")
+	public void removeJob(int batchGroupId){
+		jobService.removeJob(batchGroupId);
+	}
 
 //	/** 
 //	 * Trigger의 cron을 수정하는 컨트롤러

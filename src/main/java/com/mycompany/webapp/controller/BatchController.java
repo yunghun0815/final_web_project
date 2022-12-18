@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mycompany.webapp.model.BatchAppVo;
 import com.mycompany.webapp.model.BatchGroupVo;
+import com.mycompany.webapp.model.BatchLogVo;
 import com.mycompany.webapp.service.IBatchService;
 import com.mycompany.webapp.service.IJobService;
 
@@ -46,14 +47,22 @@ public class BatchController {
 	 * @param startDate 시작일자
 	 * @param endDate 종료일자
 	 */
-	@ResponseBody
+	/*	@ResponseBody
+		@PostMapping("/group/posts")
+		public void insertBatchGroup(BatchGroupVo vo) {
+			
+			//배치그룹 등록
+			batchService.insertBatchGroup(vo);
+			//jobStore에 job 등록
+			//jobService.addJob(vo);
+		}*/
 	@PostMapping("/group/posts")
-	public void insertBatchGroup(BatchGroupVo vo) {
+	public String insertBatchGroup2(BatchGroupVo vo) {
 		
 		//배치그룹 등록
 		batchService.insertBatchGroup(vo);
-		//jobStore에 job 등록
-		jobService.addJob(vo);
+		
+		return "redirect:/";
 	}
 	
 	/**
@@ -97,14 +106,14 @@ public class BatchController {
 	 * */
 	@ResponseBody
 	@PostMapping("/group/delete")
-	public String deleteBatchGroup(BatchGroupVo vo) {
+	public String deleteBatchGroup(int batchGroupId) {
 		try {
 			//배치 앱 삭제
-			batchService.deleteBatchAppByGroupId(vo.getBatchGroupId());
+			batchService.deleteBatchAppByGroupId(batchGroupId);
 			//배치그룹 삭제
-			batchService.deleteBatchGroup(vo.getBatchGroupId());
+			batchService.deleteBatchGroup(batchGroupId);
 			//jobStore에 등록된 잡, 트리거 정지 및 삭제
-			jobService.removeJob(vo);
+			jobService.removeJob(batchGroupId);
 		}catch(Exception e) {
 			response = e.getMessage();
 		}
@@ -123,25 +132,36 @@ public class BatchController {
 	
 	/**
 	 * 배치 프로그램 등록하는 컨트롤러
-	 * @param 
+	 * @param appId 
+	 * @param appName
+	 * @param path
 	 */
-	@ResponseBody
+	/*	@ResponseBody
+		@PostMapping("/app/posts")
+		public String insertBatchApp(BatchAppVo vo) {
+			//배치 앱 등록
+			try {
+				batchService.insertBatchApp(vo);
+			}catch(Exception e) {
+				response = e.getMessage();
+			}
+			return response;
+		}*/
 	@PostMapping("/app/posts")
-	public String insertBatchApp(BatchAppVo vo) {
+	public String insertBatchApp2(BatchAppVo vo) {
 		//배치 앱 등록
 		try {
 			batchService.insertBatchApp(vo);
 		}catch(Exception e) {
 			response = e.getMessage();
 		}
-		return response;
+		return "redirect:/";
 	}
 	/**
 	 * 배치 프로그램 수정하는 컨트롤러 
 	 * @param appId 
 	 * @param appName
 	 * @param path
-	 * @param executionOrder
 	 */
 	@ResponseBody
 	@PostMapping("/app/update")
@@ -161,12 +181,19 @@ public class BatchController {
 	 */	
 	@ResponseBody
 	@PostMapping("/app/delete")
-	public String deleteBatchApp(BatchAppVo vo) {
+	public String deleteBatchApp(int appId) {
 		try {
-			batchService.deleteBatchApp(vo.getAppId());
+			batchService.deleteBatchApp(appId);
 		}catch(Exception e) {
 			response = e.getMessage();
 		}
 		return response;
+	}
+	
+	@ResponseBody
+	@GetMapping("/log/show")
+	public List<BatchLogVo> showLog(int appId) {
+		List<BatchLogVo> vo = batchService.getBatchLogList(appId);
+		return vo;
 	}
 }

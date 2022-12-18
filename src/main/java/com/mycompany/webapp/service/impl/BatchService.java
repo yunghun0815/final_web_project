@@ -2,32 +2,58 @@ package com.mycompany.webapp.service.impl;
 
 import java.util.List;
 
+import org.quartz.JobKey;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.mycompany.webapp.dao.BatchDao;
 import com.mycompany.webapp.model.BatchAppVo;
 import com.mycompany.webapp.model.BatchGroupVo;
+import com.mycompany.webapp.model.BatchLogVo;
 import com.mycompany.webapp.service.IBatchService;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class BatchService implements IBatchService{
 
 	@Autowired
 	BatchDao batchDao;
-	
+
+	@Autowired
+	Scheduler scheduler;
+
 	@Override
-	public List<BatchGroupVo> getBatchGroupList() {
+	public List<BatchGroupVo> getBatchGroupList(){
+
+		List<BatchGroupVo> list = batchDao.getBatchGroupList();
+		try {
+			for(int i=0; i<list.size(); i++) {
+				BatchGroupVo batchGroup = list.get(i);
+				
+				if(scheduler.getJobDetail(new JobKey(batchGroup.getJobId(), batchGroup.getJobGroupId())) != null) {
+					batchGroup.setFire("Y");
+				}else {
+					batchGroup.setFire("N");
+				}
+				list.set(i, batchGroup);
+			}
+		}catch (Exception e) {
+			log.info(e.getMessage());
+		}
 		
-		return batchDao.getBatchGroupList();
+		return list;
 	}
 
 	@Override
 	public void insertBatchGroup(BatchGroupVo vo) {
-		
+
 		String jobKey = vo.getJobGroupId() + "." + vo.getJobId();
 		vo.setJobKey(jobKey);
-		System.out.println(vo.toString());
 		batchDao.insertBatchGroup(vo);
 	}
 
@@ -45,7 +71,7 @@ public class BatchService implements IBatchService{
 
 	@Override
 	public List<BatchAppVo> getBatchAppList() {
-		
+
 		return batchDao.getBatchAppList();
 	}
 
@@ -58,9 +84,11 @@ public class BatchService implements IBatchService{
 	public void updateBatchApp(BatchAppVo vo) {
 		batchDao.updateBatchApp(vo);
 	}
-
+	
+	@Transactional
 	@Override
 	public void deleteBatchApp(int batchAppId) {
+		batchDao.deleteBatchLog(batchAppId);
 		batchDao.deleteBatchApp(batchAppId);
 	}
 
@@ -79,4 +107,20 @@ public class BatchService implements IBatchService{
 		return batchDao.getBatchAppList(batchGroupId);
 	}
 
+	@Override
+	public void insertBatchLog(BatchLogVo vo) {
+		vo.setNo(batchDao.getBatchLogMaxNoByBatchApp(vo.getAppId()) + 1);
+
+		batchDao.insertBatchLog(vo);
+	}
+
+	@Override
+	public BatchGroupVo getBatchGroupByBatchGroupId(int batchGroupId) {
+		return batchDao.getBatchGroupByBatchGroupId(batchGroupId);
+	}
+
+	@Override
+	public List<BatchLogVo> getBatchLogList(int appId) {
+		return batchDao.getBatchLogList(appId);
+	}
 }

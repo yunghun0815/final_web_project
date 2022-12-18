@@ -12,9 +12,9 @@ public interface IJobService {
 
 	void pauseJob(BatchGroupVo vo);
 
-	void addJob(BatchGroupVo vo);
+	void addJob(int batchGroupId);
 
-	void removeJob(BatchGroupVo vo);
+	void removeJob(int batchGroupId);
 
 	void updateJob(BatchGroupVo vo);
 
