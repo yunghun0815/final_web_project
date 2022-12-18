@@ -32,6 +32,12 @@ public class BatchController {
 		
 		return batchService.getBatchGroupList(); 
 	}
+	
+	@ResponseBody
+	@GetMapping("/group/detail")
+	public BatchGroupVo getBatchGroupDetail(int batchGroupId) {
+		return batchService.getBatchGroupByBatchGroupId(batchGroupId);
+	}
 	/**
 	 * 배치그룹 등록 및 jobStore에 job 등록하는 컨트롤러
 	 * @param jobId  잡 아이디
@@ -82,19 +88,31 @@ public class BatchController {
 	 * @param active 자동실행 여부(Y/N)
 	 * @param endDate 종료일자
 	 */
-	@ResponseBody
+	/*	@ResponseBody
+		@PostMapping("/group/update")
+		public String updateBatchGroup(BatchGroupVo vo) {
+			try {
+				//배치그룹 수정
+				batchService.updateBatchGroup(vo);
+				//jobStore에 등록된 트리거 수정
+				jobService.updateJob(vo);			
+			}catch(Exception e) {
+				response = e.getMessage();
+				
+			}
+			return response;
+		}*/
 	@PostMapping("/group/update")
 	public String updateBatchGroup(BatchGroupVo vo) {
 		try {
 			//배치그룹 수정
 			batchService.updateBatchGroup(vo);
 			//jobStore에 등록된 트리거 수정
-			jobService.updateJob(vo);			
+			jobService.updateJob(vo);	
 		}catch(Exception e) {
 			response = e.getMessage();
-			
 		}
-		return response;
+		return "redirect:/";
 	}
 	/**
 	 * 배치그룹 + 배치프로그램 + 등록된 잡과 트리거 삭제하는 컨트롤러
@@ -131,6 +149,15 @@ public class BatchController {
 	}
 	
 	/**
+	 *	해당 appId 상세페이지 
+	 */	
+	@ResponseBody
+	@GetMapping("/app/detail")
+	public BatchAppVo getBatchAppDetail(int appId) {
+		return batchService.getbatchAppByAppId(appId);
+	}
+	
+	/**
 	 * 배치 프로그램 등록하는 컨트롤러
 	 * @param appId 
 	 * @param appName
@@ -163,7 +190,18 @@ public class BatchController {
 	 * @param appName
 	 * @param path
 	 */
-	@ResponseBody
+	/*	@ResponseBody
+		@PostMapping("/app/update")
+		public String updateBatchApp(BatchAppVo vo) {
+			
+			//배치 앱 수정
+			try {
+				batchService.updateBatchApp(vo);			
+			}catch(Exception e) {
+				response = e.getMessage();
+			}
+			return response;
+		}*/
 	@PostMapping("/app/update")
 	public String updateBatchApp(BatchAppVo vo) {
 		
@@ -173,7 +211,7 @@ public class BatchController {
 		}catch(Exception e) {
 			response = e.getMessage();
 		}
-		return response;
+		return "redirect:/";
 	}
 	/**
 	 * 배치 프로그램 삭제하는 컨트롤러 

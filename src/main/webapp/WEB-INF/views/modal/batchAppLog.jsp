@@ -2,13 +2,13 @@
     pageEncoding="UTF-8"%>
 <style>
 	#batch-app-log #log-table tr th:nth-child(1) {
-		width: 30%;
+		width: 20%;
 	}
 	#batch-app-log #log-table tr th:nth-child(2) {
-		width: 30%;
+		width: 20%;
 	}
 	#batch-app-log #log-table tr th:nth-child(3) {
-		width: 40%;
+		width: 60%;
 	}
 	#batch-app-log.modal{
 		
@@ -33,16 +33,11 @@
 	  <div class="modal-dialog">
 	    <div class="modal-content">
 	      <div class="modal-header">
-	        <h5 class="modal-title">로그</h5>
+	        <h5 id="log-app-id" class="modal-title"></h5>
 	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 	      </div>
 	      <div class="modal-body">
 	      	<table id="log-table" class="table table-striped">
-	      		<tr>
-	      			<th>프로그램ID</th>
-	      			<th>배치결과</th>
-	      			<th>완료시간</th>
-	      		</tr>
 	      	</table>
 	      </div>
 	    </div>

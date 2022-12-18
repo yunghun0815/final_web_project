@@ -34,4 +34,6 @@ public interface IBatchService {
 	BatchGroupVo getBatchGroupByBatchGroupId(int batchGroupId);
 
 	List<BatchLogVo> getBatchLogList(int appId);
+
+	BatchAppVo getbatchAppByAppId(int appId);
 }

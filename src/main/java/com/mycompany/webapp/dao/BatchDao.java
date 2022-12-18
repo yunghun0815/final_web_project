@@ -45,4 +45,6 @@ public interface BatchDao {
 	List<BatchLogVo> getBatchLogList(int appId);
 
 	void deleteBatchLog(int batchAppId);
+
+	BatchAppVo getBatchAppByAppId(int appId);
 }

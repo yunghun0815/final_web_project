@@ -114,6 +114,7 @@
 		<if test="batchGroupId != null">
 			WHERE BATCH_GROUP_ID = #{batchGroupId}
 		</if>
+		ORDER BY 2,1
 	</select>
 	
 	<insert id="insertBatchApp" parameterType="com.mycompany.webapp.model.BatchAppVo">
@@ -208,4 +209,16 @@
 		WHERE
 			APP_ID = #{appId} 
 	</delete>
+	
+	<select id="getBatchAppByAppId" parameterType="int" resultType="com.mycompany.webapp.model.BatchAppVo">
+		SELECT
+			BATCH_GROUP_ID as batchGroupId,
+			APP_ID as appId,
+			APP_NAME as appName,
+			PATH
+		FROM
+			BATCH_APP
+		WHERE
+			APP_ID = #{appId}	
+	</select>
 </mapper>

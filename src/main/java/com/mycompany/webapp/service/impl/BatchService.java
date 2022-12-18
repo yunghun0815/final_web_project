@@ -61,6 +61,7 @@ public class BatchService implements IBatchService{
 	public void updateBatchGroup(BatchGroupVo vo) {
 		String jobKey = vo.getJobGroupId() + "." + vo.getJobId();
 		vo.setJobKey(jobKey);
+		log.info(vo.toString());
 		batchDao.updateBatchGroup(vo);
 	}
 
@@ -122,5 +123,10 @@ public class BatchService implements IBatchService{
 	@Override
 	public List<BatchLogVo> getBatchLogList(int appId) {
 		return batchDao.getBatchLogList(appId);
+	}
+
+	@Override
+	public BatchAppVo getbatchAppByAppId(int appId) {
+		return batchDao.getBatchAppByAppId(appId);
 	}
 }

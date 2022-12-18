@@ -55,9 +55,6 @@
 	    width: 60px;
 	    height: 25px;
 	}
-	.group-tr, .app-tr{
-		cursor: pointer;
-	}
 </style>
 <script type="text/javascript">
 	const startBtn = `<button onclick="batchStart(this)">실행</button>`;
@@ -114,11 +111,14 @@
 			url: "/batch/log/show?appId=" + id,
 			method: "GET",
 			success: function(result){
+				
+				
+				$("#log-app-id").html(result[0]['appId'] + '번 프로그램 로그');
 				let data = '';
 				
 				data += `
 					<tr>
-						<th>프로그램ID</th>
+						<th>번호</th>
 						<th>배치결과</th>
 						<th>완료시간</th>
 					</tr>
@@ -127,9 +127,9 @@
 				for(var i=0; i<result.length; i++){
 					data += `
 						<tr>
-							<td>` + result[i]['appId'] + `</td>
+							<td>` + result[i]['no'] + `</td>
 							<td>` + result[i]['response'] + `</td>
-							<td>` + result[i]['logDate'] + `</td>
+							<td>` + new Date(result[i]['logDate']) + `</td>
 						</tr>
 					`;
 				}
@@ -142,11 +142,49 @@
 		
 	}
 	
-	function groupDetail(tr){
-		const obj = $(tr);
+	// 그룹 상세보기
+	function groupDetail(td){
+		const obj = $(td);
 		const id = obj.attr("id");
 		
+		$.ajax({
+			url: "/batch/group/detail?batchGroupId=" + id,
+			method: "GET",
+			success: function(result){
+				$("#update-batchGroupId").val(id);
+				$("#update-jobId").val(result['jobId']);
+				$("#update-jobGroupId").val(result['jobGroupId']);
+				$("#update-triggerId").val(result['triggerId']);
+				$("#update-triggerGroupId").val(result['triggerGroupId']);
+				$("#update-cron").val(result['cron']);
+				$("#update-jobGroupName").val(result['jobGroupName']);
+				$("#update-description").val(result['description']);
+				$("#update-host").val(result['host']);
+				$("#update-ip").val(result['ip']);
+				$("#update-port").val(result['port']);
+				$("#update-startDate").val(result['startDate']);
+				$("#update-endDate").val(result['endDate']);
+			}
+		})
 	}
+	
+	// 프로그램 상세보기
+	function appDetail(td){
+		const obj = $(td);
+		const id = obj.attr("id");
+		
+		$.ajax({
+			url: "/batch/app/detail?appId=" + id,
+			method: "GET",
+			success: function(result){
+				$("#update-app-batchGroupId").val(result['batchGroupId']);
+				$("#update-app-batchAppId").val(result['appId']);
+				$("#update-app-appName").val(result['appName']);
+				$("#update-app-path").val(result['path']);
+			}
+		})
+	}
+	
 	$(function(){
 		//그룹 행 삭제
 		$("#group-delete-btn").click(function(){
@@ -210,10 +248,11 @@
 					<th></th>					
 				</tr>
 				<c:forEach items="${batchGroupList}" var="group">
-					<tr id="${group.batchGroupId}" class="group-tr" onclick="groupDetail(this)">
-						<td><input id="batchGroupCheckBox" type="checkbox" value="${group.batchGroupId}"></td>
+					<tr id="${group.batchGroupId}" class="group-tr">
+						<td ><input id="batchGroupCheckBox" type="checkbox" value="${group.batchGroupId}"></td>
 						<td>${group.batchGroupId}</td>
-						<td>${group.jobGroupName}</td>
+						<td onclick="groupDetail(this)" data-bs-toggle="modal" id="${group.batchGroupId}" 
+							data-bs-target="#update-batch-group" style="cursor: pointer;">${group.jobGroupName}</td>
 						<td>${group.cron}</td>
 						<td>${group.description}</td>
 						<td>${group.host}</td>
@@ -254,7 +293,8 @@
 						<td><input id="batchAppCheckBox" type="checkbox" value="${app.appId}"></td>
 						<td>${app.batchGroupId}</td>
 						<td>${app.appId}</td>
-						<td>${app.appName}</td>
+						<td id="${app.appId}" data-bs-toggle="modal" style="cursor: pointer;" 
+							data-bs-target="#update-batch-app" onclick="appDetail(this)">${app.appName}</td>
 						<td>${app.path}</td> 
 						<td><button onclick="showLog(this)" data-bs-toggle="modal" data-bs-target="#batch-app-log">로그</button></td>
 					</tr>
@@ -265,5 +305,7 @@
 	<jsp:include page="modal/insertBatchGroup.jsp" /> <!-- 배치그룹 추가 모달창 -->
 	<jsp:include page="modal/insertBatchApp.jsp" /> <!-- 배치프로그램 추가 모달창 -->
 	<jsp:include page="modal/batchAppLog.jsp" /> <!-- 배치프로그램 로그 모달창 -->
+	<jsp:include page="modal/updateBatchGroup.jsp" /> <!-- 배치그룹 수정 모달창 -->
+	<jsp:include page="modal/updateBatchApp.jsp" /> <!-- 배치프로그램 수정 모달창 -->
 </body>
 </html>
