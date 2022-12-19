@@ -1,61 +1,7 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<!DOCTYPE html>
-<html>
-<head>
-<script src="https://code.jquery.com/jquery-3.6.2.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" ></script>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet">
-<meta charset="UTF-8">
-<title>배치 프로그램</title>
-</head>
-<style>
-	body{
-		padding: 100px 0;
-	}
-	.main{
-		width: 1200px;
-		margin: 0 auto;
-	}
-	.main table{
-		width: 100%;
-	}
-	.main table, .main tr, .main td, .main th{
-		border: 1px solid #dfdfdf;
-		text-align: center;
-	}
-	.main h2{
-		display: flex;
-		justify-content: space-between;
-	}
-	.batch-group{
-		min-height: 300px;
-		border: 1px solid gray;
-	}
-	.batch-app{
-		min-height: 200px;
-		border: 1px solid gray;
-	}
-	.title{
-		margin-top: 20px;
-	}
-	.title>span{
-		font-size: 16px;
-	    font-weight: bold;
-	    color: #126386;
-	}
-	.title button{
-		background-color: white;
-	    font-size: 13px;
-	    border: 2px solid #126386;
-	    color: #126386;
-	    font-weight: 600;
-	    border-radius: 5px;
-	    width: 60px;
-	    height: 25px;
-	}
-</style>
+<%@ page contentType="text/html; charset=UTF-8" %>
+
+<%@ include file="/WEB-INF/views/common/header.jsp" %>
+
 <script type="text/javascript">
 	const startBtn = `<button onclick="batchStart(this)">실행</button>`;
 	const stopBtn = `<button onclick="batchStop(this)">중지</button>`;
@@ -221,91 +167,98 @@
 		});
 	});
 </script>
-<body>
-	<section class="main">
-		<h2 class="title">
-			<span>배치 그룹</span>
-			<div>
-				<button data-bs-toggle="modal" data-bs-target="#insert-batch-group">행추가</button>
-				<button id="group-delete-btn">행삭제</button>
-			</div>
-		</h2>
-		<div class="batch-group">
-			<table class="table table-striped">
-				<tr>
-					<th></th>
-					<th>그룹ID</th>
-					<th>그룹명</th>
-					<th>Cron값</th>
-					<th>그룹설명</th>
-					<th>Host 명</th>
-					<th>Host IP</th>
-					<th>Port</th>
-					<th>자동실행</th>
-					<th>시작일자</th>
-					<th>종료일자</th>
-					<th>실행여부</th>
-					<th></th>					
-				</tr>
-				<c:forEach items="${batchGroupList}" var="group">
-					<tr id="${group.batchGroupId}" class="group-tr">
-						<td ><input id="batchGroupCheckBox" type="checkbox" value="${group.batchGroupId}"></td>
-						<td>${group.batchGroupId}</td>
-						<td onclick="groupDetail(this)" data-bs-toggle="modal" id="${group.batchGroupId}" 
-							data-bs-target="#update-batch-group" style="cursor: pointer;">${group.jobGroupName}</td>
-						<td>${group.cron}</td>
-						<td>${group.description}</td>
-						<td>${group.host}</td>
-						<td>${group.ip}</td>
-						<td>${group.port}</td>
-						<td>${group.active}</td>
-						<td>${group.startDate}</td>
-						<td>${group.endDate}</td>
-						<td class="fire">${group.fire}</td>
-						<td><c:if test="${group.fire == 'Y'}">
-								<button onclick="batchStop(this)">중지</button>
-							</c:if> <c:if test="${group.fire == 'N'}">
-								<button onclick="batchStart(this)">실행</button>
-							</c:if></td>
+
+<div class="card m-2">
+	<div class="card-header">
+		프로토타입
+	</div>
+	<div class="card-body">
+		<section class="main">
+			<h2 class="title">
+				<span>배치 그룹</span>
+				<div>
+					<button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#insert-batch-group">행추가</button>
+					<button class="btn btn-success btn-sm" id="group-delete-btn">행삭제</button>
+				</div>
+			</h2>
+			<div class="batch-group">
+				<table class="table table-striped">
+					<tr>
+						<th></th>
+						<th>그룹ID</th>
+						<th>그룹명</th>
+						<th>Cron값</th>
+						<th>그룹설명</th>
+						<th>Host 명</th>
+						<th>Host IP</th>
+						<th>Port</th>
+						<th>자동실행</th>
+						<th>시작일자</th>
+						<th>종료일자</th>
+						<th>실행여부</th>
+						<th></th>					
 					</tr>
-				</c:forEach>
-			</table>
-		</div>
-		<h2 class="title">
-			<span>배치 프로그램</span>
-			<div>
-				<button data-bs-toggle="modal" data-bs-target="#insert-batch-app">행추가</button>
-				<button id="app-delete-btn">행삭제</button>
+					<c:forEach items="${batchGroupList}" var="group">
+						<tr id="${group.batchGroupId}" class="group-tr">
+							<td ><input id="batchGroupCheckBox" type="checkbox" value="${group.batchGroupId}"></td>
+							<td>${group.batchGroupId}</td>
+							<td onclick="groupDetail(this)" data-bs-toggle="modal" id="${group.batchGroupId}" 
+								data-bs-target="#update-batch-group" style="cursor: pointer;">${group.jobGroupName}</td>
+							<td>${group.cron}</td>
+							<td>${group.description}</td>
+							<td>${group.host}</td>
+							<td>${group.ip}</td>
+							<td>${group.port}</td>
+							<td>${group.active}</td>
+							<td>${group.startDate}</td>
+							<td>${group.endDate}</td>
+							<td class="fire">${group.fire}</td>
+							<td><c:if test="${group.fire == 'Y'}">
+									<button onclick="batchStop(this)">중지</button>
+								</c:if> <c:if test="${group.fire == 'N'}">
+									<button onclick="batchStart(this)">실행</button>
+								</c:if></td>
+						</tr>
+					</c:forEach>
+				</table>
 			</div>
-		</h2>
-		<div class="batch-app">
-			<table class="table table-striped">
-				<tr>
-					<th></th>
-					<th>그룹ID</th>
-					<th>프로그램ID</th>
-					<th>프로그램명</th>
-					<th>실행경로</th>
-					<th></th>
-				</tr>
-				<c:forEach items="${batchAppList}" var="app">
-					<tr id="${app.appId}" class="app-tr">
-						<td><input id="batchAppCheckBox" type="checkbox" value="${app.appId}"></td>
-						<td>${app.batchGroupId}</td>
-						<td>${app.appId}</td>
-						<td id="${app.appId}" data-bs-toggle="modal" style="cursor: pointer;" 
-							data-bs-target="#update-batch-app" onclick="appDetail(this)">${app.appName}</td>
-						<td>${app.path}</td> 
-						<td><button onclick="showLog(this)" data-bs-toggle="modal" data-bs-target="#batch-app-log">로그</button></td>
+			<h2 class="title">
+				<span>배치 프로그램</span>
+				<div>
+					<button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#insert-batch-app">행추가</button>
+					<button class="btn btn-success btn-sm" id="app-delete-btn">행삭제</button>
+				</div>
+			</h2>
+			<div class="batch-app">
+				<table class="table table-striped">
+					<tr>
+						<th></th>
+						<th>그룹ID</th>
+						<th>프로그램ID</th>
+						<th>프로그램명</th>
+						<th>실행경로</th>
+						<th></th>
 					</tr>
-				</c:forEach>
-			</table>
-		</div>
-	</section>
-	<jsp:include page="modal/insertBatchGroup.jsp" /> <!-- 배치그룹 추가 모달창 -->
-	<jsp:include page="modal/insertBatchApp.jsp" /> <!-- 배치프로그램 추가 모달창 -->
-	<jsp:include page="modal/batchAppLog.jsp" /> <!-- 배치프로그램 로그 모달창 -->
-	<jsp:include page="modal/updateBatchGroup.jsp" /> <!-- 배치그룹 수정 모달창 -->
-	<jsp:include page="modal/updateBatchApp.jsp" /> <!-- 배치프로그램 수정 모달창 -->
-</body>
-</html>
+					<c:forEach items="${batchAppList}" var="app">
+						<tr id="${app.appId}" class="app-tr">
+							<td><input id="batchAppCheckBox" type="checkbox" value="${app.appId}"></td>
+							<td>${app.batchGroupId}</td>
+							<td>${app.appId}</td>
+							<td id="${app.appId}" data-bs-toggle="modal" style="cursor: pointer;" 
+								data-bs-target="#update-batch-app" onclick="appDetail(this)">${app.appName}</td>
+							<td>${app.path}</td> 
+							<td><button onclick="showLog(this)" data-bs-toggle="modal" data-bs-target="#batch-app-log">로그</button></td>
+						</tr>
+					</c:forEach>
+				</table>
+			</div>
+		</section>
+		<jsp:include page="/WEB-INF/views/modal/insertBatchGroup.jsp" /> <!-- 배치그룹 추가 모달창 -->
+		<jsp:include page="/WEB-INF/views/modal/insertBatchApp.jsp" /> <!-- 배치프로그램 추가 모달창 -->
+		<jsp:include page="/WEB-INF/views/modal/batchAppLog.jsp" /> <!-- 배치프로그램 로그 모달창 -->
+		<jsp:include page="/WEB-INF/views/modal/updateBatchGroup.jsp" /> <!-- 배치그룹 수정 모달창 -->
+		<jsp:include page="/WEB-INF/views/modal/updateBatchApp.jsp" /> <!-- 배치프로그램 수정 모달창 -->
+	</div>
+</div>
+
+<%@ include file="/WEB-INF/views/common/footer.jsp" %>

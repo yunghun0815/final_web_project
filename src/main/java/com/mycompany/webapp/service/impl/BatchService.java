@@ -34,7 +34,7 @@ public class BatchService implements IBatchService{
 		try {
 			for(int i=0; i<list.size(); i++) {
 				BatchGroupVo batchGroup = list.get(i);
-				
+				// DB에 있는 배치 그룹과 스케쥴러에 등록된 Job의 정보를 비교해 실행여부 확인
 				if(scheduler.getJobDetail(new JobKey(batchGroup.getJobId(), batchGroup.getJobGroupId())) != null) {
 					batchGroup.setFire("Y");
 				}else {

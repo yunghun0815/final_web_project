@@ -130,7 +130,7 @@ public class JobService implements IJobService {
 			scheduler.unscheduleJob(new TriggerKey(vo.getTriggerId(), vo.getTriggerGroupId()));
 			//스케줄러에서 식별된 Job과 관련 Trigger 모두 제거
 			scheduler.deleteJob(new JobKey(vo.getJobId(), vo.getJobGroupId()));
-			log.info("삭제가 완료되었습니다.");
+			log.info("Job 제거 완료.");
 		} catch (SchedulerException e) {
 			log.error(e.getMessage());
 			throw new RuntimeException();

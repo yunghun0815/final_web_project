@@ -1,0 +1,52 @@
+@charset "UTF-8";
+.navbar{
+	padding-left: 15px;
+}
+
+.main{
+	/* width: 1200px;
+	margin: 0 auto; */
+}
+.main table{
+	width: 100%;
+	font-size: 14px;
+}
+.main table, .main tr, .main td, .main th{
+	border: 1px solid #dfdfdf;
+	text-align: center;
+}
+.main h2{
+	display: flex;
+	justify-content: space-between;
+}
+.batch-group{
+	min-height: 300px;
+	border: 1px solid gray;
+}
+.batch-app{
+	min-height: 200px;
+	border: 1px solid gray;
+}
+.title{
+	margin-top: 20px;
+}
+.title>span{
+	font-size: 16px;
+    font-weight: bold;
+    color: #126386;
+}
+/* .title button{
+	background-color: white;
+    font-size: 13px;
+    border: 2px solid #126386;
+    color: #126386;
+    font-weight: 600;
+    border-radius: 5px;
+    width: 60px;
+    height: 25px;
+} */
+
+.error {
+	color: red;
+	font-size: 0.7rem;
+}
