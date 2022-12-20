@@ -107,8 +107,8 @@
 	      				</td>
 	      				<td>
 	      					<select name="active">
-	      						<option value="Y">Y</option>
-	      						<option value="N">N</option>
+	      						<option id="active-option-Y" value="Y">Y</option>
+	      						<option id="active-option-N" value="N">N</option>
 	      					</select>
 	      				</td>
 	      			</tr>  			

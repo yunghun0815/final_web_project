@@ -110,6 +110,12 @@
 				$("#update-port").val(result['port']);
 				$("#update-startDate").val(result['startDate']);
 				$("#update-endDate").val(result['endDate']);
+				
+				if(result['active'] == 'Y'){
+					$("#active-option-Y").attr("selected", "selected");
+				}else{
+					$("#active-option-N").attr("selected", "selected");
+				}
 			}
 		})
 	}
@@ -129,6 +135,10 @@
 				$("#update-app-path").val(result['path']);
 			}
 		})
+	}
+	
+	function noBatchGroup(){
+		alert("배치그룹을 먼저 등록해주세요");
 	}
 	
 	$(function(){
@@ -166,6 +176,7 @@
 			});
 		});
 	});
+	
 </script>
 
 <div class="card m-2">
@@ -225,7 +236,15 @@
 			<h2 class="title">
 				<span>배치 프로그램</span>
 				<div>
-					<button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#insert-batch-app">행추가</button>
+					<button class="btn btn-success btn-sm"
+						<c:if test="${batchGroupList.size() > 0}"> 
+						 	data-bs-toggle="modal" 
+							 data-bs-target="#insert-batch-app"
+						</c:if>					
+						<c:if test="${batchGroupList.size() == 0}"> 
+ 							onclick="noBatchGroup()" 
+						</c:if>					
+					>행추가</button>
 					<button class="btn btn-success btn-sm" id="app-delete-btn">행삭제</button>
 				</div>
 			</h2>
