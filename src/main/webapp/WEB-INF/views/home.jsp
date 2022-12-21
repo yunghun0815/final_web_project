@@ -152,28 +152,33 @@
 					data: {
 						batchGroupId: id
 					},
+					async: false,
 					success: function(result){
 						location.reload();
 					}
 				});
 			});
+			location.reload();
 		});
 		
 		//프로그램 행 삭제
 		$("#app-delete-btn").click(function(){
 			$("#batchAppCheckBox:checked").each(function(idx){
 				const id = $(this).val();
+				console.log('번호:'+id);
 				$.ajax({
 					url: "/batch/app/delete",
 					method: "POST",
 					data: {
 						appId: id
 					},
+					async: false,
 					success: function(result){
-						location.reload();
+						console.log(result);
 					}
 				});
 			});
+			location.reload();
 		});
 	});
 	

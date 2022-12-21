@@ -27,7 +27,7 @@ public class AgentJob implements Job {
 	
 	@Autowired
 	BatchServer batchServer;
-
+	
 	@Override
 	public void execute(JobExecutionContext context) throws JobExecutionException {
 		// 잡키로 찾기 path 여러개 + 아이피 + 포트
@@ -37,27 +37,31 @@ public class AgentJob implements Job {
 		
 		// 배치그룹에 등록된 앱 수만큼 실행
 		for(BatchGroupVo vo : batchGroupVo) {
-			log.info("");
-			log.info("-----------------------------------");
-			log.info(batchGroupVo.get(0).getIp() + ":" + batchGroupVo.get(0).getPort() + " 배치 프로그램 실행");
-			String ip = vo.getIp();
-			int port = vo.getPort();
-			String path = vo.getPath();
-			int appId = vo.getAppId();
+	
+			batchServer.addTask(new Runnable() {
+				
+				@Override
+				public void run() {
+					log.info("-----------------------------------");
+					log.info(vo.getPath() + " 경로 배치 프로그램 실행");
 
-			//Socket 통신 해 배치 프로그램 실행시킨 후 값 가져옴
-			String receiveMessage = batchServer.sendMessage(ip, port, path);
-			JSONObject json = new JSONObject(receiveMessage);
-			
-			//실행결과 로그에 저장
-			BatchLogVo batchLogVo = new BatchLogVo();
-			batchLogVo.setAppId(vo.getAppId());
-			batchLogVo.setResponse(json.get("response").toString());
-			long date = System.currentTimeMillis();
-			batchLogVo.setLogDate(new Timestamp(date));
-			batchService.insertBatchLog(batchLogVo);
-			
-			log.info("-----------------------------------");
+					//Socket 통신 해 배치 프로그램 실행시킨 후 값 가져옴
+					String receiveMessage = batchServer.sendMessage(vo.getIp(), vo.getPort(), vo.getPath());
+					
+					JSONObject json = new JSONObject(receiveMessage);
+					
+					//실행결과 로그에 저장
+					BatchLogVo batchLogVo = new BatchLogVo();
+					batchLogVo.setAppId(vo.getAppId());
+					batchLogVo.setResponse(json.get("response").toString());
+					long date = System.currentTimeMillis();
+					batchLogVo.setLogDate(new Timestamp(date));
+					batchService.insertBatchLog(batchLogVo);
+					
+					log.info("-----------------------------------");
+					
+				}
+			});
 		}
 	}
 }

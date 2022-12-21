@@ -222,6 +222,7 @@ public class BatchController {
 	public String deleteBatchApp(int appId) {
 		try {
 			batchService.deleteBatchApp(appId);
+			System.out.println(appId + "번 삭제시작");
 		}catch(Exception e) {
 			response = e.getMessage();
 		}

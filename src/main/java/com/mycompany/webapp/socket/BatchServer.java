@@ -23,14 +23,14 @@ public class BatchServer {
 		log.info("[서버] 시작");
 		threadPool = Executors.newFixedThreadPool(10);
 	}
-
+	
+	public void addTask(Runnable runnable) {
+		threadPool.execute(runnable);
+	}
+	
 	public String sendMessage(String ip, int port, String path) {
 		String response = null;
 		
-		log.info("메시지 전송");
-		log.info("ip : " + ip);
-		log.info("port : " + port);
-		log.info("path : " + path);
 		try {
 			Socket socket = new Socket(ip, port);
 			DataInputStream dis = new DataInputStream(socket.getInputStream());
@@ -41,13 +41,13 @@ public class BatchServer {
 			
 			response = dis.readUTF();
 			
-			
+			log.info(response);
 			
 			dos.close();
 			dis.close();
 		} catch (Exception e) {
-			JSONObject jsonObject = new JSONObject("response: fail");
-			response = jsonObject.getString("response").toString();
+			log.info("=====접속 실패=====");
+			response = "{response: 서버연결 실패}";
 			e.printStackTrace();
 		} 
 		
